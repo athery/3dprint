@@ -21,18 +21,19 @@ module board(length, width, height) {
         }
     }
 }
-
-difference() {
-    union() {
-        board(96,39.5,3.75);
-        slot(0,2);
-        slot(22,4);
-        slot(46,4);
-        slot(70,4);
-        slot(94,2);
+rotate([0,90,0]) {
+    difference() {
+        union() {
+            board(96,39.5,3.75);
+            slot(0,2);
+            slot(22,4);
+            slot(46,4);
+            slot(70,4);
+            slot(94,2);
+        }
+        translate([-5.5, -40, 12]) sphere(12);
+        translate([-5.5, -40, 36]) sphere(12);
+        translate([-5.5, -40, 60]) sphere(12);
+        translate([-5.5, -40, 84]) sphere(12);
     }
-    translate([-5.5, -40, 12]) sphere(12);
-    translate([-5.5, -40, 36]) sphere(12);
-    translate([-5.5, -40, 60]) sphere(12);
-    translate([-5.5, -40, 84]) sphere(12);
 }
