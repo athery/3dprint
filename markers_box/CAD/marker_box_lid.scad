@@ -1,5 +1,8 @@
 include <../../lib/threads.scad>;
 $fn = 200;
+
+screw_height = 7;
+
 union() {
     difference() {
         cylinder(2,25,25);
@@ -14,8 +17,8 @@ union() {
     }
     translate([0,0,2]){
         difference() {
-            metric_thread (diameter=18.5, pitch=2, length=7);
-            cylinder(7.1, 7, 7);
+            metric_thread (diameter=18.5, pitch=2, length=screw_height);
+            cylinder(screw_height+0.1, 7, 7);
         };
     }
 }
