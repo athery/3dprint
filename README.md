@@ -22,9 +22,13 @@ A plate to store my knives vertically witout messing with the blades or magnetiz
 
 A nice little object with simple moving parts to keep track of your action, movement, bonus and reaction, and **stop messing with'em**. An original idea of a friend, which turned out fun to do :)
 
+On thingiverse : https://www.thingiverse.com/thing:4057603
+
 ### Condition markers box for D&D 5e or Héros & Dragons (done)
 
 A little concentric cylinder box to hold condition markers we place around the miniatures (stunned, grappled, etc.). It comes with an optional D&D ampersand logo on the box lid.
+
+On thingiverse : https://www.thingiverse.com/thing:4058861
 
 ### Hit points tracker for D&D 5e or Héros & Dragons (work in progress)
 
