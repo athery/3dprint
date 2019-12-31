@@ -1,5 +1,13 @@
 $fn=100;
-module disc(radius=14,fontsize=6,thickness=3,padding=1, hole_radius=2.1) {
+
+// just the disc with grip side and numbers 0 to 9
+module disc(
+    radius=14,
+    fontsize=6,
+    thickness=3,
+    padding=1, 
+    hole_radius=2.1) 
+{
         difference() {
         cylinder(thickness,radius,radius);
         translate([0,0,-0.1]) cylinder(thickness+.2,hole_radius,hole_radius);
@@ -12,7 +20,15 @@ module disc(radius=14,fontsize=6,thickness=3,padding=1, hole_radius=2.1) {
     }
 }
 
-module pincher(radius=2, thickness=3.5, slit=2, wall=1, lip=0.25, lip_height=1) {
+//just the cloved cylinder to hold the disc down but let it spin
+module pincher(
+    radius=2, 
+    thickness=3.5, 
+    slit=2, 
+    wall=1, 
+    lip=0.25, 
+    lip_height=1) 
+{
     difference() {
         union() {
             cylinder(thickness, radius, radius);
@@ -23,7 +39,11 @@ module pincher(radius=2, thickness=3.5, slit=2, wall=1, lip=0.25, lip_height=1) 
     }
 }
 
-module disc_slot_front(disc_radius=14, disc_thickness=3) {
+//board, hollow disc and pincher to place the disc into
+module disc_slot(
+    disc_radius=14, 
+    disc_thickness=3) 
+{
     slot_radius = disc_radius + 1;
     slot_depth = disc_thickness + 0.5;
     board_size = 2*(disc_radius+2);
@@ -36,24 +56,19 @@ module disc_slot_front(disc_radius=14, disc_thickness=3) {
     translate([0,0,slot_depth/2]) pincher();
 }
 
-module disc_slot_back(disc_radius=15, disc_thickness=3) {
-    slot_radius = disc_radius + 1;
-    slot_depth = disc_thickness + 0.5;
-    board_size = 2*(disc_radius+10);
-    board_thickness = slot_depth + 2.5 + 0.25;
-    
-    difference() {
-        translate([-board_size/2, -board_size/2, 0]) cube([board_size,board_size-12.5,board_thickness]);
-        translate([0,0,3]) cylinder(slot_depth,slot_radius,slot_radius);
-        difference() {
-            translate([0,-22.5,board_thickness-1]) linear_extrude(2) polygon([[4,0],[-4,0],[0,6]],[[0,1,2]]);
-            translate([0,-22.5,board_thickness-1]) linear_extrude(2) polygon([[2.5,0],[-2.5,0],[0,4]],[[0,1,2]]);     
-        }
-    }
-    translate([0,0,3]) pincher();
-}
-
-module occulter_front(disc_radius=14, thickness=2, plot_height=4.5, plot_width=3, plot_thickness=1.8, clearance_radius=3, clearance_height=1, wall=1, window_width=6.5, window_height=10) {
+//lid to hide the disc and show only selected number
+module occulter(
+    disc_radius=14, 
+    thickness=2, 
+    plot_height=4.5, 
+    plot_width=3, 
+    plot_thickness=1.8, 
+    clearance_radius=3, 
+    clearance_height=1, 
+    wall=1, 
+    window_width=6.5, 
+    window_height=10) 
+{    
     board_size = 2*(disc_radius+2);
     rotate([0,0,180]) {
         difference() {
@@ -65,56 +80,38 @@ module occulter_front(disc_radius=14, thickness=2, plot_height=4.5, plot_width=3
     }
 }
 
-module occulter_back(disc_radius=15, thickness=2.5, plot_height=4.5, plot_width=3, plot_thickness=1.8, clearance_radius=3, clearance_height=1.5, wall=1, window_width=7, window_height=10, trunc=2.5) {
-        difference() {
-            cylinder(thickness, disc_radius+2*wall,disc_radius+2*wall);
-            translate([0,0,-0.1]) cylinder(0.5+0.1, disc_radius+wall,disc_radius+wall);
-            cylinder(clearance_height, clearance_radius, clearance_radius);
-            translate([-window_width/2, -disc_radius-2*wall, -0.1]) cube([window_width,window_height,thickness+0.2]);
-            translate([-disc_radius, disc_radius-trunc, -0.1]) cube([2*disc_radius,disc_radius,thickness+0.2]);
-        }
-        translate([-plot_width/2, -plot_thickness/2, -plot_height+clearance_height]) cube([plot_width, plot_thickness, plot_height]);
-}
-
-
-
-// assembly test
-//translate([0,0,-3]) disc_slot_back();
-//translate([0,0,3.25]) occulter_back();
-
-module singlepack() {
-        union() {
-            translate([0,0,-2]) disc_slot_front();
-            translate([0,0,0]) disc();
-            translate([0,0,3.25]) occulter_front();
-        }
-}
-
+// place multiple disc slots every 32mm
 module slots(nb=3, width=32) {
-    for (i=[0:nb-1]) translate([i*32,0,-2]) disc_slot_front();
+    for (i=[0:nb-1]) translate([i*32,0,-2]) disc_slot();
 }
 
-module discs(nb=3) {
-    for (i=[0:nb-1]) translate([i*32,0,0]) rotate([0,0,-i*36]) disc();
+//place multiple discs every 32mm
+module discs(nb=3, spacing=32) {
+    for (i=[0:nb-1]) translate([i*spacing,0,0]) disc();
 }
 
-module occulters(nb=3, width=32, engraving=0.5) {
+//place multiple occulters/lids every 32mm
+module occulters(label="Hit points",nb=3, width=32, engraving=0.5) {
     difference() {
         for (i=[0:nb-1]) {
-           translate([i*32,0,3.25]) occulter_front();
+           translate([i*32,0,3.25]) occulter();
         }
-        rotate([0,0,180]) translate([-width,5,4.75]) linear_extrude(engraving+0.1) text("Points de vie",8, font = "style:bold", halign = "center", valign = "center");
+        rotate([0,0,180]) 
+            translate([-width*(nb-1)/2,4,4.75]) 
+                linear_extrude(engraving+0.1) {
+                    text(label,8, font = "style:bold", halign = "center", valign = "center");
+        }
     }      
 }
 
-//assembly
+//fully assembled model for 1 or 3 slots
+module fulldemo(label, nb) {
+    slots(nb);
+    discs(nb);
+    occulters(label, nb);
+}
 
-slots();
-discs();
-occulters();
-
-//singlepack();
-
-
-
-
+//uncomment to test
+//fulldemo("~ Points de vie ~",3);
+//fulldemo("Hit points",2);
+//fulldemo("HD",1);
