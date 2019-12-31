@@ -1,5 +1,3 @@
-$fn=100;
-
 // just the disc with grip side and numbers 0 to 9
 module disc(
     radius=14,
@@ -112,6 +110,7 @@ module fulldemo(label, nb) {
 }
 
 //uncomment to test
+//$fn=100;
 //fulldemo("~ Points de vie ~",3);
 //fulldemo("Hit points",2);
 //fulldemo("HD",1);
