@@ -120,7 +120,6 @@ module occulter(
     rotate([0,0,180]) {
         difference() {
             translate([-board_size/2, -board_size/2+3.5, 0]) cube([board_size,board_size-front_clearance,thickness]);
-            //translate([0, 0, -0.1]) cylinder(clearance_height+0.1, clearance_radius, clearance_radius);
             points = [
                 [0,0,0],[window_width,0,0],
                 [window_width,window_height,0],[0,window_height,0],
@@ -183,8 +182,8 @@ module fulldemo(label, nb) {
 }
 
 //uncomment to test
-$fn=100;
-fulldemo("~ Points de vie ~",3);
+//$fn=100;
+//fulldemo("Points de vie",3);
 //fulldemo("Hit points",2);
 //$fn=100;
 //fulldemo("HD",1);
