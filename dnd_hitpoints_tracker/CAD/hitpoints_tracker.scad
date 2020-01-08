@@ -1,4 +1,78 @@
-// just the disc with grip side and numbers 0 to 9
+// WELCOME TO THE HIT POINTS TRACKER CODE
+// It still needs some work to remove hard coded values but there it is
+// You will find modules to generate your own parts, choosing the label on the top and the number of digits, at least
+// If you need more explanations, contact me, I'll be happy to help :)
+// https://www.thingiverse.com/AdrienThery/about
+
+// Happy printing, and don't loose too many of those hitpoints, OK ? ;)
+
+
+// ====================
+// READY TO PRINT PARTS
+// ====================
+
+// Create ready to print tracker base by passing the number of digits you want
+// Use it out by uncommenting the following line :
+// $fn=200; slots(3);
+module slots(nb=3) {
+    width=32;
+    for (i=[0:nb-1]) translate([i*32,0,-1.6]) disc_slot();
+}
+
+// Create n ready to print numbered discs
+// Use it out by uncommenting  the following  line :
+// $fn=200; discs(3);
+module discs(nb=3) {
+    spacing=32;
+    for (i=[0:nb-1]) translate([i*spacing,0,0]) disc();
+}
+
+// Create ready to print tracker top piece by passing the number of digits you want
+// Use it out by uncommenting the following  line :
+// $fn=200; rotate([0,180,0]) occulters("My hit points",3);
+// NB : I flipped it upside down so you can directly print if like this
+module occulters(label="Hit points",nb=3) {
+    width=32; 
+    engraving=1;
+    difference() {
+        for (i=[0:nb-1]) {
+           translate([i*32,0,3.1]) occulter();
+        }
+        rotate([0,0,180]) 
+            translate([-width*(nb-1)/2,4,4.1]) 
+                linear_extrude(engraving+0.1) {
+                    text(label,8, font = "style:bold", halign = "center", valign = "center");
+        }
+    }      
+}
+
+
+// ==============================
+// ASSEMBLED OBJECT VISUALIZATION
+// ==============================
+
+//Fully assembled model for easy 3d visualization, 
+//passing the Label and number of digits you want
+// try it out like this :
+//   $fn=100; fulldemo("Points de vie",3);
+// or this :
+//   $fn=100; fulldemo("Hit points",2);
+// or this :
+//   $fn=100; fulldemo("HD",1);
+module assembled_demo(label, nb) {
+    slots(nb);
+    discs(nb);
+    occulters(label, nb);
+}
+
+
+
+// =============================
+// PARTS CODE AND HELPER MODULES
+// =============================
+
+
+// Disc with dented side and numbers 0 to 9
 module disc(
     radius=14,
     fontsize=6,
@@ -35,25 +109,8 @@ translate([50, 0, 0]) {
         }
 }
 
-//just the cloved cylinder to hold the disc down but let it spin
-module pincher(
-    radius=3.75, 
-    thickness=3.5, 
-    slit=2, 
-    wall=1, 
-    lip=0.25, 
-    lip_height=1) 
-{
-    difference() {
-        union() {
-            cylinder(thickness, radius, radius);
-            translate([0,0,thickness]) cylinder(lip_height,radius+lip, radius-lip);
-        }
-        translate([-radius-lip,-slit/2,0]) cube([2*(radius+lip),slit,thickness+lip_height+.1]);
-        cylinder(thickness+lip_height+.1,radius-wall,radius-wall);
-    }
-}
 
+// Trapezoid prisms used to fasten base (disc slot) and lid (occulter)
 module trapezoid_prism(height, top_width, bottom_width, length) {
     points = [
         [0,0,0],[bottom_width,0,0],
@@ -71,10 +128,10 @@ module trapezoid_prism(height, top_width, bottom_width, length) {
     polyhedron(points, faces);
 }
 
-//board, hollow disc and pincher to place the disc into
+// Board, hollow disc and dented axis to place the disc onto
 module disc_slot(
     disc_radius=14, 
-    disc_thickness=3) 
+    disc_thickness=3) //a bit thicker than the real disc to avoid friction
 {
     slot_radius = disc_radius + 1;
     slot_depth = disc_thickness+0.1;
@@ -101,21 +158,18 @@ module disc_slot(
     }
 }
 
-//lid to hide the disc and show only selected number
-module occulter(
-    disc_radius=14, 
-    thickness=2, 
-    plot_height=4.5, 
-    plot_width=3, 
-    plot_thickness=1.8, 
-    clearance_radius=3, 
-    clearance_height=1, 
-    wall=1, 
-    window_width=6.5, 
-    window_height=10) 
-{    
+// Top piece to hide the disc and show only selected number
+module occulter() {
+    
+    //dimensions
+    disc_radius=14;
+    thickness=2;  
+    window_width=6.5; 
+    window_height=10; 
     board_size = 2*(disc_radius+2);
     front_clearance = 3.5;
+    backprism_length =3;
+    frontprism_length = 3;
     
     rotate([0,0,180]) {
         difference() {
@@ -133,13 +187,9 @@ module occulter(
               [5,6,2,1],  // right
               [6,7,3,2],  // back
               [7,4,0,3]]; // left;
-            translate([-window_width/2, -disc_radius-2*wall, -0.1]) polyhedron(points, faces);
-            
+            translate([-window_width/2, -disc_radius-2, -0.1]) polyhedron(points, faces);
         }
     }
-    
-    backprism_length =3;
-    frontprism_length = 3;
     
     translate([-board_size/2+2.5,-board_size/2,-2]) trapezoid_prism(2.1,1.5,2,backprism_length);
     
@@ -150,40 +200,3 @@ module occulter(
     translate([board_size/2-2.5-2.,board_size/2-front_clearance-frontprism_length,-2]) trapezoid_prism(2.1,1.5,2,frontprism_length);
 }
 
-// place multiple disc slots every 32mm
-module slots(nb=3, width=32) {
-    for (i=[0:nb-1]) translate([i*32,0,-1.6]) disc_slot();
-}
-
-//place multiple discs every 32mm
-module discs(nb=3, spacing=32) {
-    for (i=[0:nb-1]) translate([i*spacing,0,0]) disc();
-}
-
-//place multiple occulters/lids every 32mm
-module occulters(label="Hit points",nb=3, width=32, engraving=1) {
-    difference() {
-        for (i=[0:nb-1]) {
-           translate([i*32,0,3.1]) occulter();
-        }
-        rotate([0,0,180]) 
-            translate([-width*(nb-1)/2,4,4.1]) 
-                linear_extrude(engraving+0.1) {
-                    text(label,8, font = "style:bold", halign = "center", valign = "center");
-        }
-    }      
-}
-
-//fully assembled model for 1 or 3 slots
-module fulldemo(label, nb) {
-    slots(nb);
-    discs(nb);
-    occulters(label, nb);
-}
-
-//uncomment to test
-//$fn=100;
-//fulldemo("Hit points",3);
-//fulldemo("Hit points",2);
-//$fn=100;
-//fulldemo("HD",1);
