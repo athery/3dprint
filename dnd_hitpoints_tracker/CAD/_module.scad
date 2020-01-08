@@ -183,7 +183,7 @@ module fulldemo(label, nb) {
 
 //uncomment to test
 //$fn=100;
-//fulldemo("Points de vie",3);
+//fulldemo("Hit points",3);
 //fulldemo("Hit points",2);
 //$fn=100;
 //fulldemo("HD",1);
