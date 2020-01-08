@@ -54,11 +54,11 @@ module occulters(label="Hit points",nb=3) {
 //Fully assembled model for easy 3d visualization, 
 //passing the Label and number of digits you want
 // try it out like this :
-//   $fn=100; fulldemo("Points de vie",3);
+//   $fn=100; assembled_demo("Points de vie",3);
 // or this :
-//   $fn=100; fulldemo("Hit points",2);
+//   $fn=100; assembled_demo("Hit points",2);
 // or this :
-//   $fn=100; fulldemo("HD",1);
+//   $fn=100; assembled_demo("HD",1);
 module assembled_demo(label, nb) {
     slots(nb);
     discs(nb);
