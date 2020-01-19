@@ -24,15 +24,16 @@ module outer_shape() {
 }
 
 module clip() {
-    translate([0,1.2,0]) rotate([90,0,0]) linear_extrude(2.4) union() {
+    translate([0,2,0]) rotate([90,0,0]) linear_extrude(4) union() {
         square([1,3.5]);
-        polygon([[1,2],[1.6,2.6],[1,3.5]]); 
+        polygon([[1,2],[1.8,2.4],[1,3.5]]); 
+        polygon([[1,0],[1.4,0],[1,1]]);
     }
 }
 
 module cliphole() {
-    translate([0,1.6,0]) rotate([90,0,0])linear_extrude(3.2) union() {
-        polygon([[0,0],[1.8,0],[1.2,1.8],[2,2.6],[2,4],[0,4]]); 
+    translate([0,2.5,0]) rotate([90,0,0])linear_extrude(5) union() {
+        polygon([[0,0],[1.8,0],[1.2,1.8],[2,2.3],[2,4],[0,4]]); 
     }
 }
 
@@ -85,5 +86,10 @@ module left_half_key_handle() {
 
 
 //comment one if you want to print only the other
-translate([2.5,0,0]) right_half_key_handle_with_clips();
-translate([-2.5,0,0]) left_half_key_handle();
+//difference() {
+//    union() {
+        translate([2.5,0,0]) right_half_key_handle_with_clips();
+    //    translate([0,0,7]) //rotate([0,180,0]) 
+    translate([-2.5,0,0]) left_half_key_handle();
+    //}
+//}
