@@ -1,26 +1,24 @@
 module token() {
     linear_extrude(2) {
         scale(0.75) union() {
-            intersection() {
-                square([20,5]);
-                translate([10, 15, 0]) circle(15);
-            }
+            polygon([[1,0],[0,5],[20,5],[19,0]]);
             children(0);
         }
     }
 }
 
-
-module semicoin_token(sign) {
+//text_token("5");
+module text_token(sign) {
     token() translate([0.5,4.5]) text(sign, 25, font="style:bold");
 }
 
-
+//shield_token();
 module shield_token() {
     token() translate([-4,3,0]) scale(3.25) import("shield.svg");
 }
 
-module flame_token(sign) {
+//flame_text_token("8");
+module flame_text_token(sign) {
     token() difference() {
             translate([-6, 4, 0]) scale(0.09) import("flame.svg");
             translate([4,6.5,0]) text(sign, 15, font="style:bold");
@@ -28,6 +26,7 @@ module flame_token(sign) {
 }
 
 
+// yinyang_token();
 module yinyang_token() {
     token() union() {
         difference() {
@@ -38,6 +37,7 @@ module yinyang_token() {
     }
 }
 
+//flash_token();
 module flash_token() {
     token() translate([-4,-0.5,0]) {
         difference() {
@@ -47,26 +47,34 @@ module flash_token() {
     }
 }
 
+//harp_token();
 module harp_token() {
     token() translate([-2,3,0]) scale(0.075) import("harp.svg");
 }
 
+//pentagram_token();
 module pentagram_token() {
     token() translate([-3,3.5,0]) scale(0.425) import("pentagram.svg");
 }
 
-module smallflame_token() {
-    token() translate([-6,3.5,0]) scale(0.09) import("flame.svg");
-}
 
-module smallflame2_token() {
-    token() translate([-6,0.5,0]) scale(0.09) import("flame2.svg");
-}
-
-module smallflame3_token() {
+//flame_token();
+module flame_token() {
     token() translate([-3.5,3,0]) scale(0.08) import("flame3.svg");
 }
 
-module smallflame4_token() {
-    token() translate([-5.5,2.5,0]) scale(0.085) import("flame4.svg");
+
+//axes_token();
+module axes_token() {
+    token() translate([-3.5,3,0]) scale(0.155) import("axes.svg");
 }
+
+//text_token("5");
+//shield_token();
+//flame_text_token("5");
+//yinyang_token();
+//flash_token();
+//harp_token();
+pentagram_token();
+//flame_token();
+//axes_token();

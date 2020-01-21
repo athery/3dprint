@@ -1,26 +1,21 @@
-slot_depth = 5;
-slot_length = 16;
-slot_width = 2.5;
+slot_depth = 4.25;
+slot_length = 15.5;
+slot_width = 2.2;
 
 module slot() {
-    rotate([90,0,0]) linear_extrude(slot_width) {
-        scale(0.75) intersection() {
-            square([21.5,5]);
-            translate([10.75, 15, 0]) circle(15);
-        }
-    }
+    rotate([75,0,0]) linear_extrude(slot_width) polygon([[0.75,0],[0,4.5],[15.5,4.5],[14.75,0]]);
 }
 
-module board(columns=4,lines=5,margin=2.5, padding=5) {
+module board(columns=4,lines=5,margin=2.4, padding=5) {
     board_length = 2*margin+columns*slot_length+(columns-1)*padding;
     board_width = 2*margin+lines*slot_width+(lines-1)*padding;
-    board_thickness = slot_depth;
+    board_thickness = slot_depth+1;
 
     difference() {
         cube([board_length, board_width, board_thickness]);
         for (column = [0:columns-1]) {
             for (line = [0:lines-1]) {
-                translate([margin+(slot_length+padding)*column, slot_width+margin+(slot_width+padding)*line,1.25]) slot();
+                translate([margin+(slot_length+padding)*column, slot_width+margin-1+(slot_width+padding)*line,1]) slot();
             }
         }
     }
