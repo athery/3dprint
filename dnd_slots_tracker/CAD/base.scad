@@ -2,8 +2,8 @@ slot_depth = 4.25;
 slot_length = 15.5;
 slot_width = 2.2;
 
-module slot() {
-    rotate([75,0,0]) linear_extrude(slot_width) polygon([[0.75,0],[0,4.5],[15.5,4.5],[14.75,0]]);
+module slot(angle=75) {
+    rotate([angle,0,0]) linear_extrude(slot_width) polygon([[0.75,0],[0,4.5],[15.5,4.5],[14.75,0]]);
 }
 
 module board(columns=4,lines=5,margin=2.4, padding=5) {
@@ -19,7 +19,35 @@ module board(columns=4,lines=5,margin=2.4, padding=5) {
             }
         }
     }
+    
+    
+    graveyard_width = 2*margin+slot_length;
+    //left graveyard
+    translate([-graveyard_width, 0, 0])  difference() {
+        cube([2*margin+slot_length,board_width, board_thickness]);
+        translate([margin,2*margin,board_thickness-slot_depth]){
+            for (line = [0:2*(lines-1)]) {
+                translate([0,line*(slot_width+1),0]) slot(90);
+            }
+        }
+        translate([margin+2.5,board_width-4,board_thickness-1.5]) linear_extrude(2) text("court",3, font = "style:bold");
+    }
+    
+    //right graveyard
+    translate([board_length, 0, 0])  difference() {
+        cube([2*margin+slot_length,board_width, board_thickness]);
+        translate([margin,2*margin,board_thickness-slot_depth]){
+            for (line = [0:2*(lines-1)]) {
+                translate([0,line*(slot_width+1),0]) slot(90);
+            }
+        }
+        translate([margin+3,board_width-4,board_thickness-1.5]) linear_extrude(2) text("long",3, font = "style:bold");
+    }
+}
+
+module graveyard(text="Repos court", width, length, thickness, margin=2.4, padding=5) {
+    
 }
 
 $fn=200;
-board(4,5);
+board(3,5);
